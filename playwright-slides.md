@@ -227,81 +227,65 @@ playwright-cli attach --cdp=http://localhost:9222
 
 ---
 
-## 実演: デモアプリ (Task Manager)
+## 実演①: スクリーンショット取得
 
 ![bg right:55% fit](assets/todo-app.png)
 
-```tsx
-<input
-  data-testid="todo-input"
-  type="text"
-/>
-<button data-testid="add-button">
-  Add Task
-</button>
-<ul data-testid="todo-list">
-  <li>
-    <input
-      data-testid="checkbox-1"
-      type="checkbox"
-    />
-    <span data-testid="todo-text-1">
-      Playwrightを学ぶ
-    </span>
-  </li>
-</ul>
+```bash
+# ブラウザでアプリを開く
+playwright-cli goto http://localhost:5173/
+
+# スクリーンショットを保存
+playwright-cli screenshot \
+  --filename=todo-app.png
 ```
+
+→ 操作するたびに TypeScript コードが自動生成される
 
 ---
 
-## 実演: タスクを追加する
+## 実演②: タスクを追加する
 
 ![bg right:55% fit](assets/todo-added.png)
 
 ```bash
-# テキストを入力してボタンクリック
+# テキストを入力
 playwright-cli fill \
   "data-testid=todo-input" \
   "スライドを完成させる"
 
+# 追加ボタンをクリック
 playwright-cli click \
   "data-testid=add-button"
 ```
 
-操作と同時に TypeScript コードが生成される：
-
-```typescript
-await page.getByTestId('todo-input')
-  .fill('スライドを完成させる');
-await page.getByTestId('add-button').click();
-```
+→ 3件目のタスクが追加され、カウントが更新される
 
 ---
 
-## 実演: チェックして完了にする
+## 実演③: チェックして完了にする
 
 ![bg right:55% fit](assets/todo-checked.png)
 
 ```bash
-# チェックボックスをON
+# 1件目のチェックボックスをON
 playwright-cli check \
   "data-testid=checkbox-1"
+
+# 要素のテキストを取得
+playwright-cli eval \
+  "el => el.textContent" \
+  "data-testid=todo-count"
+# => "1 of 3 tasks completed"
 ```
 
-生成されたコード：
-
-```typescript
-await page.getByTestId('checkbox-1').check();
-```
-
-サイドバーの **Done: 1** がリアルタイム更新
-→ UIの状態変化をそのままテストに使える
+→ サイドバーの Done が **0 → 1** にリアルタイム更新
 
 ---
 
-## E2Eテストコードの例
+## 実演④: E2Eテストに組み込む
 
-操作ログをそのままテストに組み込める
+操作ログをそのままテストに使える
 
 ```typescript
 import { test, expect } from '@playwright/test';
@@ -309,16 +293,13 @@ import { test, expect } from '@playwright/test';
 test('タスクを追加して完了にする', async ({ page }) => {
   await page.goto('http://localhost:5173/');
 
-  // タスクを追加
   await page.getByTestId('todo-input')
     .fill('スライドを完成させる');
   await page.getByTestId('add-button').click();
 
-  // リストに追加されたことを確認
   await expect(page.getByTestId('todo-list'))
     .toContainText('スライドを完成させる');
 
-  // 完了チェック → カウントが変わることを確認
   await page.getByTestId('checkbox-1').check();
   await expect(page.getByTestId('todo-count'))
     .toContainText('1 of 3 tasks completed');
