@@ -304,6 +304,7 @@ test('タスクを追加して完了にする', async ({ page }) => {
   await expect(page.getByTestId('todo-count'))
     .toContainText('1 of 3 tasks completed');
 });
+```
 
 ---
 
