@@ -322,19 +322,7 @@ playwright-cli tracing-stop     # .trace ファイルに保存
 
 ---
 
-## Trace Viewer で可視化できること
-
-![bg right:55%](assets/trace-viewer.png)
-
-- **Actions** — 全操作をタイムライン表示
-- **Before / After** — 操作前後のスクリーンショット
-- **Call** — セレクタ・duration・結果
-- **Network** — リクエスト/レスポンス詳細
-- **Timeline** — 各操作の実行時間バー
-
-```bash
-npx playwright show-trace trace.trace
-```
+![bg fit](assets/trace-analysis.png)
 
 ---
 
