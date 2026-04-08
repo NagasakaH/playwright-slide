@@ -202,25 +202,22 @@ WSLからWindowsのChromeを操作できる
 
 ## SKILL.md への追記内容
 
-````diff
-+## Chrome on WSL
-+
-+"/mnt/c/.../chrome.exe"が存在する場合、`ask_user`でユーザーに確認
-+Windowsでの起動を求められた場合は下記を実施
-+
-+Chromeをheadedで起動(バックグランドで実行)
-+```bash
-+"/mnt/c/Program Files/Google/Chrome/Application/chrome.exe" \
-+  --remote-debugging-port=9222 \
-+  --user-data-dir='C:\tmp\pw-chrome-debug' \
-+  --no-first-run https://www.google.com
-+```
-+起動したchromeにplaywrightをAttach
-+```bash
-+playwright-cli attach --cdp=http://localhost:9222
-+```
-+終了時は`ask_user`でブラウザをクローズするか確認
-````
+`"/mnt/c/Program Files/Google/Chrome/Application/chrome.exe"` が存在する場合に
+`ask_user` か `askQuestions` などの対話ツールを使ってユーザにWindowsのChromeを使用するか確認し、
+Windowsでの起動を求められた場合は下記を実施
+
+```bash
+"/mnt/c/Program Files/Google/Chrome/Application/chrome.exe" \
+  --remote-debugging-port=9222 \
+  --user-data-dir='C:\tmp\pw-chrome-debug' \
+  --no-first-run https://www.google.com
+```
+
+```bash
+playwright-cli attach --cdp=http://localhost:9222
+```
+
+終了する際はブラウザをクローズしてよいか `ask_user` か `askQuestions` で確認
 
 ---
 
