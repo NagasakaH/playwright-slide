@@ -308,6 +308,48 @@ test('タスクを追加して完了にする', async ({ page }) => {
 
 ---
 
+## 生成AIはどう使っているか
+
+ユーザーの依頼 → コマンド選択 → 実行 → 結果報告
+
+```
+ユーザー: 「画面のタスクを全部完了にして」
+          ↓
+AI:  1. snapshot   ← 画面構造を把握
+     2. check ×N  ← チェックボックスをON
+     3. screenshot ← 完了状態を記録して報告
+```
+
+- **snapshot** で要素の `ref` や `data-testid` を確認してから操作
+- 操作のたびに TypeScript コードが生成されるのでそのままテストに使える
+- スクリーンショットで「実際にどうなったか」を証拠として返す
+
+---
+
+## 実例: 依頼 → 操作の流れ
+
+> **「スライドを完成させるを追加して、1番目を完了にして」**
+
+```bash
+# 1. 画面構造を確認
+playwright-cli snapshot
+# => todo-input, add-button, checkbox-1 ... を発見
+
+# 2. タスクを追加
+playwright-cli fill "data-testid=todo-input" "スライドを完成させる"
+playwright-cli click "data-testid=add-button"
+
+# 3. 1番目を完了チェック
+playwright-cli check "data-testid=checkbox-1"
+
+# 4. 完了状態を取得して報告
+playwright-cli eval \
+  "el => el.textContent" "data-testid=todo-count"
+# => "1 of 3 tasks completed"
+```
+
+---
+
 <!-- _class: lead -->
 <!-- _paginate: false -->
 
