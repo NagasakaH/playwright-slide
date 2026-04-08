@@ -231,193 +231,88 @@ playwright-cli attach --cdp=http://localhost:9222
 
 ---
 
-## 実演① スクリーンショット
+## 実演: デモアプリ (Task Manager)
 
-![bg right:50%](assets/playwright-top.png)
+`data-testid` 属性でPlaywrightから操作しやすい設計に
 
-実際に取得したスクリーンショット
-
-```bash
-playwright-cli goto https://playwright.dev
-playwright-cli screenshot \
-  --filename=top.png
-```
-
----
-
-## 実演② データ取得
-
-playwright.dev から取得した `h1` テキスト：
-
-> Playwright enables reliable web automation for testing, scripting, and AI agents.
-
-```bash
-playwright-cli eval \
-  "document.querySelector('h1').textContent"
-```
-
----
-
-## 実演③ API一覧取得
-
-Page クラスのメソッド名を一括取得：
-
-```
-addInitScript, addLocatorHandler,
-addScriptTag, addStyleTag,
-ariaSnapshot, bringToFront,
-cancelPickLocator, clearConsoleMessages,
-clearPageErrors, close ...
-```
-
-```bash
-playwright-cli eval \
-  "Array.from(document.querySelectorAll('h3.anchor'))
-   .map(h => h.textContent).join(', ')"
-```
-
----
-
-## 実演④ 開発者ツール
-
-コンソール・ネットワーク・トレースを取得できる
-
-```bash
-# コンソールログを確認
-playwright-cli console
-
-# ネットワークリクエスト一覧
-playwright-cli network
-```
-
-実際に playwright.dev で取得したネットワークログ：
-
-```
-[GET] https://playwright.dev/assets/js/17896441.14782575.js
-[GET] https://playwright.dev/assets/js/4cf51b27.9f497a86.js
-[GET] https://playwright.dev/assets/js/e0719818.d9b9b916.js
-...
-```
-
----
-
-## 実演⑤ トレース記録
-
-操作を記録して後からデバッグできる
-
-```bash
-playwright-cli tracing-start
-playwright-cli click e24        # 操作を記録
-playwright-cli tracing-stop     # .trace ファイルに保存
-```
-
-保存されたトレース：
-
-```
-.playwright-cli/traces/trace-xxx.trace
-.playwright-cli/traces/trace-xxx.network
-```
-
-> Trace Viewer で再生・ネットワーク・スクリーンショットを確認可能
-
----
-
-![bg fit](assets/trace-analysis.png)
-
----
-
-## E2Eテストの作り方
-
-playwright-cli の操作から **テストコードを自動生成**
-
-### ワークフロー
-
-1. `playwright-cli open` でブラウザを開く
-2. 操作すると自動でコードが出力される
-3. 出力コードをテストファイルにまとめる
-4. `npx playwright test` で実行
-
----
-
-## コード自動生成の例
-
-操作するだけでコードが生成される！
-
-```bash
-playwright-cli goto https://playwright.dev
-# => await page.goto('https://playwright.dev');
-
-playwright-cli click e24  # Searchボタン
-# => await page.getByRole('button',
-#      { name: 'Search (Ctrl+K)' }).click();
-```
-
-テストファイルに組み込む：
-
-```typescript
-import { test, expect } from '@playwright/test';
-
-test('playwright.dev 検索', async ({ page }) => {
-  await page.goto('https://playwright.dev');
-  await page.getByRole('button',
-    { name: 'Search (Ctrl+K)' }).click();
-  await expect(page.getByRole('searchbox'))
-    .toBeVisible();
-});
-```
-
----
-
-## 実演: デモアプリ (TODOアプリ)
-
-`data-testid` 属性を付けてPlaywrightで操作しやすい設計に
-
-![bg right:50% fit](assets/todo-app.png)
+![bg right:55% fit](assets/todo-app.png)
 
 ```tsx
 <input
   data-testid="todo-input"
-  type="text" ...
+  type="text"
 />
-<button data-testid="add-button">追加</button>
+<button data-testid="add-button">
+  Add Task
+</button>
 <ul data-testid="todo-list">
   <li>
-    <input data-testid="checkbox-1" type="checkbox" />
-    <span data-testid="todo-text-1">...</span>
-    <button data-testid="delete-1">削除</button>
+    <input
+      data-testid="checkbox-1"
+      type="checkbox"
+    />
+    <span data-testid="todo-text-1">
+      Playwrightを学ぶ
+    </span>
   </li>
 </ul>
 ```
 
 ---
 
-## 実演: playwright-cli でデモ操作
+## 実演: タスクを追加する
 
-コマンド1行でタスク追加・チェックが操作できる
-
-![bg right:50% fit](assets/todo-checked.png)
+![bg right:55% fit](assets/todo-added.png)
 
 ```bash
-# タスクを入力して追加
-playwright-cli fill e6 "スライドを完成させる"
-playwright-cli click e7   # 追加ボタン
+# テキストを入力してボタンクリック
+playwright-cli fill \
+  "data-testid=todo-input" \
+  "スライドを完成させる"
 
-# チェックボックスをON
-playwright-cli check e10  # checkbox-1
+playwright-cli click \
+  "data-testid=add-button"
 ```
 
-> 操作するたびにコードが自動生成される 🎉
+操作と同時に TypeScript コードが生成される：
+
+```typescript
+await page.getByTestId('todo-input')
+  .fill('スライドを完成させる');
+await page.getByTestId('add-button').click();
+```
 
 ---
 
-## 実演: E2Eテストコードの例
+## 実演: チェックして完了にする
 
-生成されたコードをそのままテストに使える
+![bg right:55% fit](assets/todo-checked.png)
+
+```bash
+# チェックボックスをON
+playwright-cli check \
+  "data-testid=checkbox-1"
+```
+
+生成されたコード：
+
+```typescript
+await page.getByTestId('checkbox-1').check();
+```
+
+サイドバーの **Done: 1** がリアルタイム更新
+→ UIの状態変化をそのままテストに使える
+
+---
+
+## E2Eテストコードの例
+
+操作ログをそのままテストに組み込める
 
 ```typescript
 import { test, expect } from '@playwright/test';
 
-test('TODOを追加して完了にする', async ({ page }) => {
+test('タスクを追加して完了にする', async ({ page }) => {
   await page.goto('http://localhost:5173/');
 
   // タスクを追加
@@ -425,16 +320,15 @@ test('TODOを追加して完了にする', async ({ page }) => {
     .fill('スライドを完成させる');
   await page.getByTestId('add-button').click();
 
-  // 追加されたことを確認
+  // リストに追加されたことを確認
   await expect(page.getByTestId('todo-list'))
     .toContainText('スライドを完成させる');
 
-  // 完了にチェック
+  // 完了チェック → カウントが変わることを確認
   await page.getByTestId('checkbox-1').check();
   await expect(page.getByTestId('todo-count'))
-    .toContainText('残り 2 / 3 件');
+    .toContainText('1 of 3 tasks completed');
 });
-```
 
 ---
 
