@@ -1,0 +1,37 @@
+# playwrightと生成AIでブラウザ操作をしてみる
+
+## playwrightとは
+
+
+## playwrightのインストール
+
+CLIツールのインストール
+
+```
+$ npm i -g @playwright/cli@latest
+```
+
+スキルは下記から
+- https://github.com/microsoft/playwright-cli/tree/main/skills/playwright-cli
+
+## WSLからWindowsのchromeをplaywrightで操作できるようにする
+
+下記の内容をSKILL.mdに追記
+
+----
+## Chrome on WSL                                                                                                                                                                                                                                "/mnt/c/Program Files/Google/Chrome/Application/chrome.exe"が存在する場合に下記の質問をユーザーに対して実施してください                                                                                                                         `ask_user`か`askQuestions`などの対話ツールを使ってユーザにWindowsのChromeを使用するか確認しWindowsでの起動を求められた場合は下記の手順を実施してください                                                                                                                                                                                                                Chromeをheadedで起動(バックグランドで実行)
+
+```bash
+"/mnt/c/Program Files/Google/Chrome/Application/chrome.exe" --remote-debugging-port=9222 --user-data-dir='C:\tmp\pw-chrome-debug' --no-first-run https://www.google.com
+```
+
+起動したchromeにplaywrightをAttach
+
+```bash
+playwright-cli attach --cdp=http://localhost:9222
+```
+
+終了する際はブラウザをクローズしてよいかユーザーに`ask_user`か`askQuestions`で確認してください
+---
+
+## ブラウザでどんなことができるの？
