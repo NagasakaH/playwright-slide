@@ -278,6 +278,50 @@ playwright-cli eval \
 
 ---
 
+## 実演④ 開発者ツール
+
+コンソール・ネットワーク・トレースを取得できる
+
+```bash
+# コンソールログを確認
+playwright-cli console
+
+# ネットワークリクエスト一覧
+playwright-cli network
+```
+
+実際に playwright.dev で取得したネットワークログ：
+
+```
+[GET] https://playwright.dev/assets/js/17896441.14782575.js
+[GET] https://playwright.dev/assets/js/4cf51b27.9f497a86.js
+[GET] https://playwright.dev/assets/js/e0719818.d9b9b916.js
+...
+```
+
+---
+
+## 実演⑤ トレース記録
+
+操作を記録して後からデバッグできる
+
+```bash
+playwright-cli tracing-start
+playwright-cli click e24        # 操作を記録
+playwright-cli tracing-stop     # .trace ファイルに保存
+```
+
+保存されたトレース：
+
+```
+.playwright-cli/traces/trace-xxx.trace
+.playwright-cli/traces/trace-xxx.network
+```
+
+> Trace Viewer で再生・ネットワーク・スクリーンショットを確認可能
+
+---
+
 ## E2Eテストの作り方
 
 playwright-cli の操作から **テストコードを自動生成**
