@@ -310,19 +310,11 @@ test('タスクを追加して完了にする', async ({ page }) => {
 
 ## 生成AIはどう使っているか
 
-ユーザーの依頼 → コマンド選択 → 実行 → 結果報告
+> 実例: 「**全タスクを完了にして**」と依頼したとき
 
-```
-ユーザー: 「画面のタスクを全部完了にして」
-          ↓
-AI:  1. snapshot   ← 画面構造を把握
-     2. check ×N  ← チェックボックスをON
-     3. screenshot ← 完了状態を記録して報告
-```
-
-- **snapshot** で要素の `ref` や `data-testid` を確認してから操作
-- 操作のたびに TypeScript コードが生成されるのでそのままテストに使える
-- スクリーンショットで「実際にどうなったか」を証拠として返す
+<div style="text-align:center;">
+  <img src="assets/ai-flow.drawio.png" style="width:75%;display:block;margin:0 auto;">
+</div>
 
 ---
 
