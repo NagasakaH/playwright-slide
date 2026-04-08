@@ -5,15 +5,15 @@ paginate: true
 ---
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Fira+Code:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Fira+Code:wght@400;500&display=swap');
 
 :root {
-  --color-background: #0d1117;
-  --color-foreground: #c9d1d9;
-  --color-heading: #58a6ff;
-  --color-accent: #7ee787;
-  --color-code-bg: #161b22;
-  --color-border: #30363d;
+  --color-background: #ffffff;
+  --color-foreground: #1f2937;
+  --color-heading: #1e40af;
+  --color-accent: #3b82f6;
+  --color-code-bg: #f0f4f8;
+  --color-border: #d1d5db;
   --font-default: 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
   --font-code: 'Fira Code', 'Consolas', 'Monaco', monospace;
 }
@@ -24,11 +24,11 @@ section {
   font-family: var(--font-default);
   font-weight: 400;
   box-sizing: border-box;
-  border-left: 4px solid var(--color-accent);
+  border-top: 6px solid var(--color-heading);
   position: relative;
   line-height: 1.6;
   font-size: 20px;
-  padding: 56px;
+  padding: 52px 56px 48px;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -36,50 +36,42 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--color-heading);
   margin: 0;
   padding: 0;
-  font-family: var(--font-code);
 }
 
 h1 {
   font-size: 48px;
   line-height: 1.3;
-  text-align: left;
-}
-
-h1::before {
-  content: '# ';
-  color: var(--color-accent);
 }
 
 h2 {
-  font-size: 36px;
-  margin-bottom: 36px;
+  position: absolute;
+  top: 36px;
+  left: 56px;
+  right: 56px;
+  font-size: 30px;
   padding-bottom: 12px;
-  border-bottom: 2px solid var(--color-border);
+  border-bottom: 3px solid var(--color-accent);
 }
 
-h2::before {
-  content: '## ';
-  color: var(--color-accent);
+h2 + * {
+  margin-top: 96px;
 }
 
 h3 {
-  color: var(--color-foreground);
-  font-size: 24px;
-  margin-top: 28px;
-  margin-bottom: 10px;
-}
-
-h3::before {
-  content: '### ';
   color: var(--color-accent);
+  font-size: 22px;
+  margin-top: 24px;
+  margin-bottom: 8px;
+  font-weight: 600;
 }
 
 ul, ol {
-  padding-left: 32px;
+  padding-left: 28px;
 }
 
 li {
   margin-bottom: 10px;
+  line-height: 1.6;
 }
 
 li::marker {
@@ -90,46 +82,43 @@ pre {
   background-color: var(--color-code-bg);
   border: 1px solid var(--color-border);
   border-radius: 6px;
-  padding: 16px;
+  padding: 14px 16px;
   overflow-x: auto;
   font-family: var(--font-code);
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1.5;
 }
 
 code {
   background-color: var(--color-code-bg);
-  color: var(--color-accent);
+  color: var(--color-heading);
   padding: 2px 6px;
   border-radius: 3px;
   font-family: var(--font-code);
-  font-size: 0.9em;
+  font-size: 0.88em;
+  border: 1px solid var(--color-border);
 }
 
 pre code {
   background-color: transparent;
+  border: none;
   padding: 0;
   color: var(--color-foreground);
 }
 
 footer {
-  font-size: 14px;
-  color: #8b949e;
-  font-family: var(--font-code);
+  font-size: 13px;
+  color: #6b7280;
   position: absolute;
   left: 56px;
   right: 56px;
-  bottom: 40px;
+  bottom: 36px;
   text-align: right;
 }
 
-footer::before {
-  content: '// ';
-  color: var(--color-accent);
-}
-
 section.lead {
-  border-left: 4px solid var(--color-accent);
+  border-top: 6px solid var(--color-heading);
+  background: linear-gradient(135deg, #ffffff 0%, #eff6ff 100%);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -141,13 +130,20 @@ section.lead h1 {
 
 section.lead p {
   font-size: 22px;
-  color: var(--color-foreground);
-  font-family: var(--font-code);
+  color: #4b5563;
 }
 
 strong {
-  color: var(--color-accent);
+  color: var(--color-heading);
   font-weight: 700;
+}
+
+blockquote {
+  border-left: 4px solid var(--color-accent);
+  padding-left: 16px;
+  color: #4b5563;
+  margin: 16px 0;
+  font-size: 18px;
 }
 </style>
 
@@ -232,8 +228,6 @@ playwright-cli attach --cdp=http://localhost:9222
 ---
 
 ## 実演: デモアプリ (Task Manager)
-
-`data-testid` 属性でPlaywrightから操作しやすい設計に
 
 ![bg right:55% fit](assets/todo-app.png)
 
