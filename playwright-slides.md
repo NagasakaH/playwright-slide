@@ -322,29 +322,19 @@ playwright-cli tracing-stop     # .trace ファイルに保存
 
 ---
 
-## トレースで可視化できること
+## Trace Viewer で可視化できること
 
-### `.network` ファイル — リクエスト詳細
+![bg right:55%](assets/trace-viewer.png)
 
+- **Actions** — 全操作をタイムライン表示
+- **Before / After** — 操作前後のスクリーンショット
+- **Call** — セレクタ・duration・結果
+- **Network** — リクエスト/レスポンス詳細
+- **Timeline** — 各操作の実行時間バー
+
+```bash
+npx playwright show-trace trace.trace
 ```
-GET [200] application/javascript
-  https://playwright.dev/assets/js/2154.a2debd9f.js
-GET [200] application/javascript
-  https://playwright.dev/assets/js/1381.bfe68003.js
-```
-
-### `.trace` ファイル — 操作ログ
-
-```json
-{ "type": "before", "class": "Frame",
-  "method": "ariaSnapshot", ... }
-{ "type": "screencast-frame", ... }
-{ "type": "after", "result": { "snapshot": "..." } }
-```
-
-- 各操作の **前後の DOM スナップショット**
-- **スクリーンキャスト**（画面録画フレーム）
-- **タイムライン**（実行時間・順序）
 
 ---
 
