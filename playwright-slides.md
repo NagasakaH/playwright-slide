@@ -368,6 +368,76 @@ test('playwright.dev 検索', async ({ page }) => {
 
 ---
 
+## 実演: デモアプリ (TODOアプリ)
+
+`data-testid` 属性を付けてPlaywrightで操作しやすい設計に
+
+![bg right:50% fit](assets/todo-app.png)
+
+```tsx
+<input
+  data-testid="todo-input"
+  type="text" ...
+/>
+<button data-testid="add-button">追加</button>
+<ul data-testid="todo-list">
+  <li>
+    <input data-testid="checkbox-1" type="checkbox" />
+    <span data-testid="todo-text-1">...</span>
+    <button data-testid="delete-1">削除</button>
+  </li>
+</ul>
+```
+
+---
+
+## 実演: playwright-cli でデモ操作
+
+コマンド1行でタスク追加・チェックが操作できる
+
+![bg right:50% fit](assets/todo-checked.png)
+
+```bash
+# タスクを入力して追加
+playwright-cli fill e6 "スライドを完成させる"
+playwright-cli click e7   # 追加ボタン
+
+# チェックボックスをON
+playwright-cli check e10  # checkbox-1
+```
+
+> 操作するたびにコードが自動生成される 🎉
+
+---
+
+## 実演: E2Eテストコードの例
+
+生成されたコードをそのままテストに使える
+
+```typescript
+import { test, expect } from '@playwright/test';
+
+test('TODOを追加して完了にする', async ({ page }) => {
+  await page.goto('http://localhost:5173/');
+
+  // タスクを追加
+  await page.getByTestId('todo-input')
+    .fill('スライドを完成させる');
+  await page.getByTestId('add-button').click();
+
+  // 追加されたことを確認
+  await expect(page.getByTestId('todo-list'))
+    .toContainText('スライドを完成させる');
+
+  // 完了にチェック
+  await page.getByTestId('checkbox-1').check();
+  await expect(page.getByTestId('todo-count'))
+    .toContainText('残り 2 / 3 件');
+});
+```
+
+---
+
 <!-- _class: lead -->
 <!-- _paginate: false -->
 
